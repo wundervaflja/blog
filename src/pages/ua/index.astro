@@ -1,0 +1,62 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostList from "../../components/PostList.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("blogUa", ({ data }) => !data.draft);
+const posts = allPosts
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    .slice(0, 5);
+---
+
+<Base
+    title="~/devnullgor"
+    description="Блог Ігоря — AI, дані, стартапи та /dev/null"
+>
+    <section class="hero">
+        <div class="hero-greeting prompt">привіт, світ</div>
+        <h1>Ігор</h1>
+        <p class="hero-bio">
+            Будую на перетині AI, data платформ та сумнівних стартап-ідей.
+            Ex-Adyen, Ex-Miro. Амстердам. Три стартапи — один придбаний, два
+            відправлені в <code>/dev/null</code>. Пишу про те, що вижило.
+        </p>
+        <div class="social-links">
+            <a
+                href="https://github.com/wundervaflja"
+                target="_blank"
+                rel="noopener">github</a
+            >
+            <a
+                href="https://www.linkedin.com/in/igor-lushchyk/"
+                target="_blank"
+                rel="noopener">linkedin</a
+            >
+            <a href="https://x.com/devnullgor_ua" target="_blank" rel="noopener"
+                >twitter</a
+            >
+        </div>
+    </section>
+
+    <div class="section-heading">останні пости</div>
+
+    {
+        posts.length > 0 ? (
+            <PostList posts={posts} basePath="/ua/blog" />
+        ) : (
+            <p class="prompt" style="color: var(--text-muted);">
+                постів ще немає. скоро буде.
+            </p>
+        )
+    }
+
+    {
+        allPosts.length > 5 && (
+            <p style="margin-top: 1rem;">
+                <a href="/ua/blog/" class="prompt">
+                    всі пости →
+                </a>
+            </p>
+        )
+    }
+</Base>

@@ -1,0 +1,27 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PostList from '../../../components/PostList.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blogUa', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
+---
+<Base title="блог" description="Всі пости Ігоря">
+  <h1>блог<span class="cursor"></span></h1>
+
+  {allTags.length > 0 && (
+    <div style="margin-bottom: 1.5rem;">
+      {allTags.map(tag => (
+        <a href={`/ua/blog/tag/${tag}/`} class="tag">{tag}</a>
+      ))}
+    </div>
+  )}
+
+  {posts.length > 0 ? (
+    <PostList posts={posts} basePath="/ua/blog" />
+  ) : (
+    <p class="prompt" style="color: var(--text-muted);">постів ще немає. ініціалізація...</p>
+  )}
+</Base>

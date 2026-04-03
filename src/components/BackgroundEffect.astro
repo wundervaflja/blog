@@ -1,0 +1,110 @@
+---
+import { siteConfig } from '../config';
+const effect = siteConfig.backgroundEffect;
+---
+
+{effect === 'crt' && (
+  <div class="scanlines"></div>
+)}
+
+{effect === 'matrix' && (
+  <canvas id="matrix-canvas"></canvas>
+)}
+
+<style>
+  /* CRT Scanlines */
+  .scanlines {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(255, 255, 255, 0.03) 4px
+    );
+    animation: scanline-flicker 4s ease-in-out infinite;
+  }
+  :global(.light) .scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  }
+  @keyframes scanline-flicker {
+    0%, 94%, 100% { opacity: 1; }
+    95% { opacity: 0.6; }
+    96% { opacity: 1; }
+    97% { opacity: 0.4; }
+    98% { opacity: 1; }
+  }
+  .scanlines::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 255, 65, 0.02) 2px,
+      rgba(0, 255, 65, 0.02) 4px
+    );
+    animation: scanline-scroll 8s linear infinite;
+  }
+  @keyframes scanline-scroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+  }
+
+  /* Matrix Rain */
+  #matrix-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+</style>
+
+{effect === 'matrix' && (
+  <script>
+    const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const cols = Math.floor(canvas.width / 14);
+    const drops: number[] = Array(cols).fill(1);
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモ0123456789';
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00ff41';
+
+    function draw() {
+      ctx.fillStyle = 'rgba(13, 17, 23, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = accent;
+      ctx.font = '12px monospace';
+      ctx.globalAlpha = 0.06;
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(char, i * 14, drops[i] * 14);
+        if (drops[i] * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+)}

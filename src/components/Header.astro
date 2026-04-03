@@ -1,13 +1,23 @@
 ---
 const pathname = Astro.url.pathname;
+const isUa = pathname.startsWith('/ua');
+const enPath = isUa ? pathname.replace(/^\/ua/, '') || '/' : pathname;
+const uaPath = isUa ? pathname : `/ua${pathname === '/' ? '' : pathname}`;
 ---
 <header class="site-header">
   <div class="container">
-    <a href="/" class="site-logo"><span class="tilde">~</span>/devnullgor</a>
+    <a href={isUa ? "/ua/" : "/"} class="site-logo"><span class="tilde">~</span>/devnullgor</a>
     <nav>
-      <a href="/blog/" class:list={[{ active: pathname.startsWith('/blog') }]}>blog</a>
-      <a href="/projects/" class:list={[{ active: pathname.startsWith('/projects') }]}>projects</a>
-      <a href="/about/" class:list={[{ active: pathname.startsWith('/about') }]}>about</a>
+      <a href={isUa ? "/ua/blog/" : "/blog/"} class:list={[{ active: pathname.includes('/blog') }]}>
+        {isUa ? '/блог' : '/blog'}
+      </a>
+      <a href="/projects/" class:list={[{ active: pathname.startsWith('/projects') }]}>
+        {isUa ? '/проєкти' : '/projects'}
+      </a>
+      <a href={isUa ? "/ua/about/" : "/about/"} class:list={[{ active: pathname.includes('/about') }]}>
+        {isUa ? '/про мене' : '/about'}
+      </a>
+      <span class="lang-switch">{'{'}<a href={enPath} class:list={[{ active: !isUa }]}>en</a>,<a href={uaPath} class:list={[{ active: isUa }]}>ua</a>{'}'}</span>
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">◐</button>
     </nav>
   </div>

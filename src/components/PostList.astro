@@ -1,6 +1,6 @@
 ---
 interface Post {
-  slug: string;
+  id: string;
   data: {
     title: string;
     date: Date;
@@ -10,9 +10,10 @@ interface Post {
 
 interface Props {
   posts: Post[];
+  basePath?: string;
 }
 
-const { posts } = Astro.props;
+const { posts, basePath = '/blog' } = Astro.props;
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
@@ -22,15 +23,15 @@ function formatDate(date: Date): string {
   });
 }
 
-function getPostUrl(slug: string, date: Date): string {
+function getPostUrl(id: string, date: Date): string {
   const year = date.getFullYear();
-  return `/blog/${year}/${slug}/`;
+  return `${basePath}/${year}/${id}/`;
 }
 ---
 <ul class="post-list">
   {posts.map((post) => (
     <li>
-      <a href={getPostUrl(post.slug, post.data.date)} class="post-title">
+      <a href={getPostUrl(post.id, post.data.date)} class="post-title">
         {post.data.title}
       </a>
       <time class="post-date" datetime={post.data.date.toISOString()}>
