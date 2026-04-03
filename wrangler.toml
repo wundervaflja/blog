@@ -1,5 +1,5 @@
 name = "devnullgor-dev"
 compatibility_date = "2026-04-03"
 
-[site]
-bucket = "./dist"
+[assets]
+directory = "./dist"
