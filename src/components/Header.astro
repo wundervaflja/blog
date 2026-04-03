@@ -1,0 +1,25 @@
+---
+const pathname = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><span class="tilde">~</span>/devnullgor</a>
+    <nav>
+      <a href="/blog/" class:list={[{ active: pathname.startsWith('/blog') }]}>blog</a>
+      <a href="/projects/" class:list={[{ active: pathname.startsWith('/projects') }]}>projects</a>
+      <a href="/about/" class:list={[{ active: pathname.startsWith('/about') }]}>about</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">◐</button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  btn?.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isLight = html.classList.contains('light');
+    html.classList.toggle('light', !isLight);
+    html.classList.toggle('dark', isLight);
+    localStorage.setItem('theme', isLight ? 'dark' : 'light');
+  });
+</script>

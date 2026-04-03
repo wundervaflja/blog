@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Collect all tags
+const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
+---
+<Base title="blog" description="All posts by Igor">
+  <h1>blog<span class="cursor"></span></h1>
+
+  {allTags.length > 0 && (
+    <div style="margin-bottom: 1.5rem;">
+      {allTags.map(tag => (
+        <a href={`/blog/tag/${tag}/`} class="tag">{tag}</a>
+      ))}
+    </div>
+  )}
+
+  {posts.length > 0 ? (
+    <PostList posts={posts} />
+  ) : (
+    <p class="prompt" style="color: var(--text-muted);">no posts yet. initializing blog sequence...</p>
+  )}
+</Base>

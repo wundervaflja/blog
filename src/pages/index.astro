@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+---
+<Base title="~/devnullgor">
+  <section class="hero">
+    <div class="hero-greeting prompt">hello, world</div>
+    <h1>Igor Lushchyk</h1>
+    <p class="hero-bio">
+      Engineer building things at the intersection of AI, data platforms, and fintech.
+      Ex-Adyen, Ex-Miro. Based in Amsterdam.
+      Writing about engineering, startups, and whatever doesn't get piped to <code>/dev/null</code>.
+    </p>
+    <div class="social-links">
+      <a href="https://github.com/devnullgor" target="_blank" rel="noopener">github</a>
+      <a href="https://linkedin.com/in/igorlushchyk" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://twitter.com/" target="_blank" rel="noopener">twitter</a>
+      <a href="https://substack.com/" target="_blank" rel="noopener">substack</a>
+    </div>
+  </section>
+
+  <div class="section-heading">latest posts</div>
+
+  {posts.length > 0 ? (
+    <PostList posts={posts} />
+  ) : (
+    <p class="prompt" style="color: var(--text-muted);">no posts yet. check back soon.</p>
+  )}
+
+  {allPosts.length > 5 && (
+    <p style="margin-top: 1rem;">
+      <a href="/blog/" class="prompt">view all posts →</a>
+    </p>
+  )}
+</Base>

@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+const sorted = projects.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+---
+<Base title="projects" description="Things Igor has built">
+  <h1>projects<span class="cursor"></span></h1>
+
+  {sorted.length > 0 ? (
+    sorted.map(project => (
+      <div class="project-card">
+        <h3>
+          {project.data.url ? (
+            <a href={project.data.url} target="_blank" rel="noopener">{project.data.title}</a>
+          ) : (
+            project.data.title
+          )}
+        </h3>
+        {project.data.description && <p>{project.data.description}</p>}
+        {project.data.tags && project.data.tags.length > 0 && (
+          <div style="margin-top: 0.5rem;">
+            {project.data.tags.map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+        {project.data.github && (
+          <p style="margin-top: 0.5rem;">
+            <a href={project.data.github} target="_blank" rel="noopener" style="font-size: var(--font-size-xs);">
+              → source
+            </a>
+          </p>
+        )}
+      </div>
+    ))
+  ) : (
+    <p class="prompt" style="color: var(--text-muted);">projects loading... check back soon.</p>
+  )}
+</Base>
