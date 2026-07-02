@@ -21,3 +21,6 @@ Thumbs.db
 
 # cloudflare
 .wrangler/
+
+# local pi agent state
+.pi/
