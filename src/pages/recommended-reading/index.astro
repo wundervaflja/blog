@@ -1,0 +1,94 @@
+---
+import Base from "../../layouts/Base.astro";
+import {
+    readingList,
+    readingStatusLabels,
+    readingStatusOrder,
+    type ReadingStatus,
+} from "../../data/reading";
+
+const grouped = readingStatusOrder.map((status) => ({
+    status,
+    label: readingStatusLabels[status],
+    items: readingList.filter((item) => item.status === status),
+}));
+
+const categories = [
+    ...new Set(readingList.map((item) => item.category)),
+].sort();
+---
+
+<Base
+    title="Am reading"
+    description="Books and articles I'm reading ,read, wants to read, or just recommend."
+>
+    <h1>Am reading<span class="cursor"></span></h1>
+
+    <div class="post-content">
+        <p>
+            Books and articles I'm reading, read, wants to read, or just
+            recommend
+        </p>
+
+        {
+            categories.length > 0 && (
+                <p class="reading-categories">
+                    {categories.map((category) => (
+                        <span class="tag">{category}</span>
+                    ))}
+                </p>
+            )
+        }
+
+        {
+            readingList.length === 0 ? (
+                <div class="reading-empty">
+                    <p class="prompt">nothing tracked yet.</p>
+                    <p>
+                        I will add books and articles here as I clean up my
+                        notes.
+                    </p>
+                </div>
+            ) : (
+                grouped.map(
+                    ({ status, label, items }) =>
+                        items.length > 0 && (
+                            <section class="reading-section" id={status}>
+                                <h2>{label}</h2>
+                                <ul class="reading-list">
+                                    {items.map((item) => (
+                                        <li class="reading-item">
+                                            <div>
+                                                <h3>
+                                                    {item.url ? (
+                                                        <a
+                                                            href={item.url}
+                                                            target="_blank"
+                                                            rel="noopener"
+                                                        >
+                                                            {item.title}
+                                                        </a>
+                                                    ) : (
+                                                        item.title
+                                                    )}
+                                                </h3>
+                                                <p class="reading-author">
+                                                    by {item.author}
+                                                </p>
+                                                {item.note && (
+                                                    <p>{item.note}</p>
+                                                )}
+                                            </div>
+                                            <span class="tag">
+                                                {item.category}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
+                        ),
+                )
+            )
+        }
+    </div>
+</Base>

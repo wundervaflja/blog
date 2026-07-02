@@ -551,6 +551,62 @@ nav a.active {
 }
 
 /* ============================================
+   Reading list
+   ============================================ */
+.reading-categories {
+  margin-top: 1.5rem;
+}
+
+.reading-empty {
+  border: 1px dashed var(--border);
+  padding: 1rem 1.5rem;
+  margin-top: 2rem;
+}
+
+.reading-empty p:last-child {
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+.reading-section {
+  margin-top: 2rem;
+}
+
+.reading-list {
+  list-style: none;
+  padding: 0;
+}
+
+.reading-item {
+  border-bottom: 1px dashed var(--border);
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.reading-item:last-child {
+  border-bottom: none;
+}
+
+.reading-item h3 {
+  margin: 0 0 0.25rem;
+  font-size: var(--font-size-base);
+}
+
+.reading-item h3::before {
+  content: '> ';
+  color: var(--accent);
+}
+
+.reading-author {
+  color: var(--text-dim);
+  font-size: var(--font-size-sm);
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================
    Projects
    ============================================ */
 .project-card {

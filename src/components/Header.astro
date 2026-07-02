@@ -24,6 +24,12 @@ const uaPath = isUa ? pathname : `/ua${pathname === "/" ? "" : pathname}`;
                 {isUa ? "/проєкти" : "/projects"}
             </a>
             <a
+                href="/recommended-reading/"
+                class:list={[{ active: pathname.startsWith("/recommended-reading") }]}
+            >
+                {isUa ? "/читати" : "/reading"}
+            </a>
+            <a
                 href={isUa ? "/ua/about/" : "/about/"}
                 class:list={[{ active: pathname.includes("/about") }]}
             >
